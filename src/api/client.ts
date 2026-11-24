@@ -5,6 +5,9 @@
 
 import type { ApiError, PaginationLinks } from "../types/canvas.ts";
 
+/** Canvas rejects requests without a User-Agent (403), and Workers fetch sends none */
+const USER_AGENT = "canvas-lms-mcp";
+
 /**
  * Parse a Canvas JSON response without losing precision on large IDs.
  *
@@ -35,17 +38,26 @@ export interface ClientOptions {
   apiToken: string;
   /** Items per page for paginated requests (default: 100) */
   perPage?: number;
+  /**
+   * If set, file downloads may only follow redirects to the Canvas host or to
+   * hosts ending in one of these domains (e.g. "inscloudgate.net"). Used where
+   * there is no runtime sandbox (Cloudflare Workers); under Deno the
+   * --allow-net flag enforces this instead.
+   */
+  downloadHostSuffixes?: string[];
 }
 
 export class CanvasClient {
   private baseUrl: string;
   private apiToken: string;
   private perPage: number;
+  private downloadHostSuffixes?: string[];
 
   constructor(options: ClientOptions) {
     this.baseUrl = options.baseUrl.replace(/\/$/, "");
     this.apiToken = options.apiToken;
     this.perPage = options.perPage || 100;
+    this.downloadHostSuffixes = options.downloadHostSuffixes;
   }
 
   /**
@@ -114,6 +126,7 @@ export class CanvasClient {
 
     const headers: HeadersInit = {
       Authorization: `Bearer ${this.apiToken}`,
+      "User-Agent": USER_AGENT,
       Accept: "application/json",
     };
 
@@ -172,6 +185,7 @@ export class CanvasClient {
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${this.apiToken}`,
+          "User-Agent": USER_AGENT,
           Accept: "application/json",
         },
       });
@@ -227,9 +241,17 @@ export class CanvasClient {
       if (current.protocol !== "https:") {
         throw new Error(`Refusing non-HTTPS download URL (${current.host})`);
       }
+      if (
+        this.downloadHostSuffixes && current.host !== canvasHost &&
+        !this.downloadHostSuffixes.some((sfx) =>
+          current.hostname === sfx || current.hostname.endsWith(`.${sfx}`)
+        )
+      ) {
+        throw new Error(`Refusing to download from unexpected host ${current.hostname}`);
+      }
       const headers: HeadersInit = current.host === canvasHost
-        ? { Authorization: `Bearer ${this.apiToken}` }
-        : {};
+        ? { Authorization: `Bearer ${this.apiToken}`, "User-Agent": USER_AGENT, Accept: "*/*" }
+        : { "User-Agent": USER_AGENT, Accept: "*/*" };
       const response = await fetch(current, { headers, redirect: "manual" });
 
       if (response.status >= 300 && response.status < 400) {
@@ -242,7 +264,9 @@ export class CanvasClient {
 
       if (!response.ok) {
         await response.body?.cancel();
-        throw new Error(`File download failed: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `File download failed: ${response.status} ${response.statusText} (from ${current.hostname})`,
+        );
       }
 
       const declared = Number(response.headers.get("content-length") ?? "0");

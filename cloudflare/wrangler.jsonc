@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "canvas-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "send_metrics": false,
+
+  // The shared code in ../src imports these bare specifiers; resolve them from
+  // this folder's node_modules (and swap Deno's dotenv for a no-op).
+  "alias": {
+    "zod": "./node_modules/zod/index.js",
+    "@modelcontextprotocol/sdk/server/mcp.js": "./node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp.js",
+    "@std/dotenv": "./src/shims/std-dotenv.ts"
+  },
+
+  "vars": {
+    "CANVAS_BASE_URL": "https://canvas.uw.edu",
+    "MCP_SERVER_URL": "https://canvas-mcp.wadhwaniaarav.workers.dev/mcp",
+    "ALLOWED_GITHUB_USER_ID": "66585793",
+    "ALLOWED_REDIRECT_HOSTS": "claude.ai,claude.com",
+    "DOWNLOAD_HOST_SUFFIXES": "canvas-user-content.com,inscloudgate.net",
+    "GITHUB_CLIENT_ID": "Ov23liaLKBNiLcdwOZ7m"
+  },
+
+  // Secrets (set with `wrangler secret put`, never stored here):
+  //   CANVAS_API_TOKEN, GITHUB_CLIENT_SECRET
+
+  "kv_namespaces": [
+    { "binding": "OAUTH_KV", "id": "c849040d30dd4e00a1cfdb91e109ed56" }
+  ]
+}

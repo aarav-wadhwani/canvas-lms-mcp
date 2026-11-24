@@ -1,0 +1,19 @@
+{
+  // LOCAL TEST ONLY. Never deploy this config.
+  "name": "canvas-mcp-test-harness",
+  "main": "harness.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "workers_dev": false,
+  "send_metrics": false,
+  "alias": {
+    "zod": "../node_modules/zod/index.js",
+    "@modelcontextprotocol/sdk/server/mcp.js": "../node_modules/@modelcontextprotocol/sdk/dist/esm/server/mcp.js",
+    "@std/dotenv": "../src/shims/std-dotenv.ts"
+  },
+  "vars": {
+    "CANVAS_BASE_URL": "https://canvas.uw.edu",
+    "ALLOWED_GITHUB_USER_ID": "66585793",
+    "DOWNLOAD_HOST_SUFFIXES": "canvas-user-content.com,inscloudgate.net"
+  }
+}

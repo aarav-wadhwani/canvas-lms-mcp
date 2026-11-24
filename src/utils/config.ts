@@ -73,6 +73,13 @@ export function getConfig(): Config {
 }
 
 /**
+ * Set config directly (used by runtimes without Deno.env, e.g. Cloudflare Workers)
+ */
+export function setConfig(config: Config): void {
+  cachedConfig = { ...config, baseUrl: config.baseUrl.replace(/\/$/, "") };
+}
+
+/**
  * Clear cached config (useful for testing)
  */
 export function clearConfigCache(): void {

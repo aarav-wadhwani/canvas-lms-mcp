@@ -9,13 +9,15 @@ import { tools } from "./tools/index.ts";
 import { prompts } from "./prompts/index.ts";
 import type { AnyToolDefinition, ToolResponse } from "./types.ts";
 
-// Read version from deno.json if available
+// Read version from deno.json if available (Deno only; other runtimes use the default)
 let version = "1.0.0";
-try {
-  const denoJson = JSON.parse(await Deno.readTextFile("./deno.json"));
-  version = denoJson.version || version;
-} catch {
-  // Use default version if deno.json not found
+if (typeof Deno !== "undefined") {
+  try {
+    const denoJson = JSON.parse(await Deno.readTextFile("./deno.json"));
+    version = denoJson.version || version;
+  } catch {
+    // Use default version if deno.json not found
+  }
 }
 
 /**
@@ -32,14 +34,14 @@ function adaptToolHandler(handler: AnyToolDefinition["handler"]) {
 /**
  * Create and configure the MCP server with all tools and prompts
  */
-export function createServer(): McpServer {
+export function createServer(toolList: AnyToolDefinition[] = tools): McpServer {
   const server = new McpServer({
     name: "canvas-lms-mcp",
     version,
   });
 
   // Register all tools with annotations
-  for (const tool of tools) {
+  for (const tool of toolList) {
     const adaptedHandler = adaptToolHandler(tool.handler);
     if (tool.annotations) {
       server.tool(
