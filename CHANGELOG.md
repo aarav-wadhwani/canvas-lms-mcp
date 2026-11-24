@@ -1,5 +1,64 @@
 # Changelog
 
+## [0.2.19](https://github.com/aarav-wadhwani/canvas-lms-mcp/compare/canvas-lms-mcp-v0.2.18...canvas-lms-mcp-v0.2.19) (2026-11-24)
+
+
+### Features
+
+* add announcements and inbox commands ([8218db9](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/8218db9ca553132c97181928639fcbe068a31493))
+* add announcements and inbox commands ([3c4201e](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/3c4201e9bce7986f7ad12b03e281fd416e91494c))
+* add combined get_teacher_communications tool ([b1f3807](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/b1f3807f667ab2b5ddfbb2813db4021d0554c899))
+* add MCP Desktop Extension icon ([5339e0f](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/5339e0f4de871942ea6f3265544ddca9443f2a28))
+* add MCP Desktop Extension icon ([3af059a](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/3af059a9906783d6a302e70d9f986cdfcb9d9c9d))
+* add npm/mcpb packaging, CI/CD, and modular MCP architecture ([c70c722](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/c70c7227a2d132505203f12c3e1bb751905dcda7))
+* add shared service layer for CLI/MCP parity ([0f06377](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/0f0637762f8b0068b5a4f545b0bea0e0b6e98550))
+* unified MCP server architecture with SSE transport (v0.2.0) ([#3](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/3)) ([1b76a9c](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/1b76a9cfae43b3fc26c963cb283214de8e5dba08))
+
+
+### Bug Fixes
+
+* always rebuild npm package in build:extension ([#33](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/33)) ([a09f475](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/a09f4753132900a74f2fdbef8bb686ab7ca496c3))
+* detect release commits by commit message pattern ([da481bc](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/da481bc98ee3d89488240a428ac2e7871b207321))
+* detect release pattern in merge commit messages ([304f360](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/304f360ebb334860efedaf889e174878e1c95554))
+* filter missing/unsubmitted assignments by current grading period ([#31](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/31)) ([57ad28b](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/57ad28b87e57256211c3e907b36fe06297e6d711))
+* format README.md table alignment ([042bc79](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/042bc793703e952f70d009a31941c0d977cd35e6))
+* have release-please dispatch CI on its PR branch ([594a306](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/594a306b0c69b730e25096a2cf297c732e1cca61))
+* have release-please dispatch CI on its PR branch ([5ce6545](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/5ce6545662d67ae679f6498c9edc2b59e0e41a86))
+* improve announcements discoverability for AI tool selection ([7361235](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/7361235f4972b2e0031361cde0fed205b7ceb843))
+* improve announcements discoverability for AI tool selection ([2243425](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/224342538f974bced257b305d4ffed63c60abf0c))
+* include ci/docs commits in changelog and releases ([4d98ff0](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/4d98ff0822f371856bdd3db2ef9b16ac0feb5e50))
+* parse release-please PR output as JSON object ([2deb1d5](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/2deb1d52c2d6711e210b6ed0fb2b943156eac24f))
+* parse release-please PR output as JSON object ([bdf696f](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/bdf696f66e356dc146528b1378f6410977405e8b))
+* remove registry-url that requires token for npm trusted publishing ([1f849f5](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/1f849f5be2c399c23eaa8d091ce2c2b8ea39c30d))
+* replace icon with edge-to-edge transparent version ([adb7d2d](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/adb7d2d1bc07a26e29e94660b1ac732ef201a276))
+* replace icon with edge-to-edge transparent version ([a49763d](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/a49763d23cd38675caf444156b589aa281791f0d))
+* report commit statuses when CI runs via workflow_dispatch ([7e4fdbb](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/7e4fdbbb8f95d86e0ce77a2e1e73e073523699b0))
+* report commit statuses when CI runs via workflow_dispatch ([fb52c20](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/fb52c20926f59cf44b933090524f07b1e4857457))
+* resolve all lint errors for CI ([e238574](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/e2385742e6745ec9ec35f87026ac4e20e5a22b96))
+* resolve all lint errors for CI ([f573286](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/f5732867abc946ead96d896efcbd2d2f123e0a5d))
+* resolve student ID properly for observer/parent accounts ([bca0b18](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/bca0b18b8d2f001fc67ee70d4cdd6e31d9cf56d6))
+* trigger CI on release-please branch pushes ([e7cf435](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/e7cf435e28e494983264889002cfbdfd8f93acde))
+* trigger CI on release-please branch pushes ([8df6a1d](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/8df6a1dacc27df0bf4aa28ee5ac611f387751578))
+* use current grading period when fetching enrollment grades ([#29](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/29)) ([34888fd](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/34888fd9cc5538d489c3da9ccfbefac567b40bbe))
+* use getEffectiveStudentId consistently across CLI and MCP ([#7](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/7)) ([254b9a3](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/254b9a385d6a848324ee75a0220d8d94a2c73e32))
+* use NPM_TOKEN secret for npm authentication ([cba2962](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/cba2962752053c589192bf728493eeab0f748288))
+* use workflow_call to chain release-please with publish ([a8a860a](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/a8a860ab1b1ad33c18743a3dde501f5b6f93167a))
+* use workflow_dispatch for publish to match npm trusted publisher ([e5140f7](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/e5140f740049947068e4427c400bb7f24686e4c9))
+
+
+### Documentation
+
+* add Claude Code and Standalone CLI documentation ([deab381](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/deab381cf95b3a5df1204f38569105956e74b35b))
+* add grading period filtering documentation to README ([#35](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/35)) ([bb5f9ab](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/bb5f9abc132db96b5a6baca36bf9c088949d7ceb))
+* clarify --student option uses CANVAS_STUDENT_ID from config as fallback ([857e924](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/857e92444baf6b8232eb54cfd42dbffb7a7863fc))
+* **mcp:** improve tool descriptions and schemas for better LLM usage ([#27](https://github.com/aarav-wadhwani/canvas-lms-mcp/issues/27)) ([b3d6c05](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/b3d6c054b5d5e6b859c0f55c8dd6f3228d786a8a))
+
+
+### CI/CD
+
+* add workflow_dispatch trigger to publish workflow ([4583e4b](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/4583e4b91f493fcc1dc294e39cd5d51f177f0ef5))
+* auto-trigger publish workflow when release is created ([ad70aef](https://github.com/aarav-wadhwani/canvas-lms-mcp/commit/ad70aef1c1cd808b9f3e57ac067dd9ee13573303))
+
 ## [0.2.18](https://github.com/mtgibbs/canvas-lms-mcp/compare/canvas-lms-mcp-v0.2.17...canvas-lms-mcp-v0.2.18) (2026-02-13)
 
 
