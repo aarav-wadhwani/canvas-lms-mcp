@@ -4,11 +4,12 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getUpcomingAssignments } from "../../services/index.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
 
 export const schema = {
-  course_id: z.number().describe("Course ID"),
+  course_id: canvasId().describe("Course ID"),
   days: z.number().optional().default(7).describe("Number of days to look ahead (default: 7)"),
 };
 

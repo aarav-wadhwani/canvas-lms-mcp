@@ -4,6 +4,7 @@
  */
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
 import { tools } from "./tools/index.ts";
 import { prompts } from "./prompts/index.ts";
 import type { AnyToolDefinition, ToolResponse } from "./types.ts";
@@ -62,12 +63,22 @@ export function createServer(): McpServer {
 
   // Register all prompts
   for (const prompt of prompts) {
+    // The SDK expects a Zod raw shape for prompt arguments, not an array of
+    // {name, description, required}. Passing the array made prompts/list fail
+    // with "field.isOptional is not a function". student_id is always made
+    // optional (defaulting to "self") so students don't need to look up their ID.
+    const argsShape: Record<string, z.ZodTypeAny> = {};
+    for (const arg of prompt.arguments) {
+      const base = z.string().describe(arg.description ?? arg.name);
+      argsShape[arg.name] = arg.required && arg.name !== "student_id" ? base : base.optional();
+    }
     // deno-lint-ignore no-explicit-any
     (server as any).prompt(
       prompt.name,
       prompt.description,
-      prompt.arguments,
-      prompt.handler,
+      argsShape,
+      (args: Record<string, string | undefined>) =>
+        prompt.handler({ ...args, student_id: args.student_id || "self" }),
     );
   }
 

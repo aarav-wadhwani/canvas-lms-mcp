@@ -4,6 +4,7 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getCalendarEvents } from "../../services/index.ts";
 import { getEffectiveStudentId } from "../../api/users.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
@@ -18,8 +19,7 @@ export const schema = {
     .optional()
     .default(14)
     .describe("Number of days to look ahead for calendar events (default: 14)"),
-  course_id: z
-    .number()
+  course_id: canvasId()
     .optional()
     .describe(
       "Filter to a specific course ID. Use 'get_courses' to find this ID from a course name.",

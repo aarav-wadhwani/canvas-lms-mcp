@@ -4,6 +4,7 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getTeacherCommunications } from "../../services/index.ts";
 import { getEffectiveStudentId } from "../../api/users.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
@@ -18,8 +19,7 @@ export const schema = {
     .optional()
     .default(7)
     .describe("Number of days to look back for announcements (default: 7)"),
-  course_id: z
-    .number()
+  course_id: canvasId()
     .optional()
     .describe("Filter to a specific course ID"),
 };

@@ -4,6 +4,7 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getDiscussions } from "../../services/index.ts";
 import { getEffectiveStudentId } from "../../api/users.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
@@ -20,8 +21,7 @@ export const schema = {
     .describe(
       "Number of days to look back for discussion topics (default: 30). Filters by posted_at or last_reply_at.",
     ),
-  course_id: z
-    .number()
+  course_id: canvasId()
     .optional()
     .describe(
       "Filter to a specific course ID. Use 'get_courses' to find this ID from a course name.",

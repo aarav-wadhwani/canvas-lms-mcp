@@ -4,6 +4,7 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getMissingAssignments } from "../../services/index.ts";
 import { getEffectiveStudentId } from "../../api/users.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
@@ -13,7 +14,7 @@ export const schema = {
     .string()
     .optional()
     .describe("Student ID (uses configured CANVAS_STUDENT_ID if not provided)"),
-  course_id: z.number().optional().describe("Filter by specific course ID"),
+  course_id: canvasId().optional().describe("Filter by specific course ID"),
   all_grading_periods: z
     .boolean()
     .optional()

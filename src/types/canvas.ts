@@ -117,6 +117,54 @@ export interface Assignment {
   };
   /** Attached files/materials */
   attachments?: Attachment[];
+  /** Allowed file extensions for online_upload submissions */
+  allowed_extensions?: string[];
+  /** Number of submission attempts allowed (-1 = unlimited) */
+  allowed_attempts?: number;
+  /** True if the assignment is locked for the current user */
+  locked_for_user?: boolean;
+  /** Explanation of why the assignment is locked */
+  lock_explanation?: string;
+  /** Rubric criteria, if a rubric is attached */
+  rubric?: RubricCriterion[];
+  /** Rubric settings, if a rubric is attached */
+  rubric_settings?: RubricSettings;
+  /** Whether the rubric is used for grading */
+  use_rubric_for_grading?: boolean;
+}
+
+/** A single rubric criterion (row) */
+export interface RubricCriterion {
+  id: string;
+  description: string;
+  long_description: string | null;
+  points: number;
+  criterion_use_range?: boolean;
+  ratings: RubricRating[];
+}
+
+/** A rating (column) within a rubric criterion */
+export interface RubricRating {
+  id: string;
+  description: string;
+  long_description: string | null;
+  points: number;
+}
+
+/** Rubric-level settings */
+export interface RubricSettings {
+  id: number;
+  title: string;
+  points_possible: number;
+  free_form_criterion_comments?: boolean;
+  hide_score_total?: boolean;
+}
+
+/** Instructor's assessment of one rubric criterion, keyed by criterion ID */
+export interface RubricAssessmentEntry {
+  points?: number | null;
+  rating_id?: string | null;
+  comments?: string | null;
 }
 
 export type SubmissionType =
@@ -178,6 +226,8 @@ export interface Submission {
   preview_url?: string;
   attachments?: Attachment[];
   submission_comments?: SubmissionComment[];
+  /** Rubric scores per criterion, keyed by criterion ID (when include[]=rubric_assessment) */
+  rubric_assessment?: Record<string, RubricAssessmentEntry>;
 }
 
 /** Comment on a submission */
@@ -420,4 +470,33 @@ export interface AssignmentWithStatus {
   missing: boolean;
   late: boolean;
   html_url: string;
+}
+
+/** File in a course's Files area (GET /courses/:id/files, /files/:id) */
+export interface CanvasFile {
+  id: number;
+  folder_id: number;
+  display_name: string;
+  filename: string;
+  "content-type": string;
+  url: string;
+  size: number;
+  created_at: string;
+  updated_at: string;
+  modified_at?: string;
+  locked: boolean;
+  hidden: boolean;
+  locked_for_user: boolean;
+  lock_explanation?: string;
+  mime_class?: string;
+}
+
+/** Folder in a course's Files area */
+export interface CanvasFolder {
+  id: number;
+  name: string;
+  full_name: string;
+  parent_folder_id: number | null;
+  files_count: number;
+  folders_count: number;
 }

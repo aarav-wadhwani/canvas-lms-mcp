@@ -5,6 +5,31 @@
 
 import type { ApiError, PaginationLinks } from "../types/canvas.ts";
 
+/**
+ * Parse a Canvas JSON response without losing precision on large IDs.
+ *
+ * Canvas cross-shard IDs (e.g. 28348000000000123) exceed
+ * Number.MAX_SAFE_INTEGER, so plain JSON.parse silently rounds them and any
+ * follow-up request using that ID hits the wrong resource. Integers that
+ * cannot be represented exactly are kept as their original digit string;
+ * every other number is untouched. Canvas accepts either form in URLs.
+ */
+export function parseCanvasJson<T>(text: string): T {
+  return JSON.parse(
+    text,
+    // deno-lint-ignore no-explicit-any
+    (_key: string, value: unknown, context?: { source?: string }): any => {
+      if (
+        typeof value === "number" && !Number.isSafeInteger(value) &&
+        context?.source && /^-?\d+$/.test(context.source)
+      ) {
+        return context.source;
+      }
+      return value;
+    },
+  ) as T;
+}
+
 export interface ClientOptions {
   baseUrl: string;
   apiToken: string;
@@ -121,7 +146,7 @@ export class CanvasClient {
       throw new Error(errorMessage);
     }
 
-    const data = await response.json() as T;
+    const data = parseCanvasJson<T>(await response.text());
     const links = this.parseLinkHeader(response.headers.get("Link"));
 
     return { data, links };
@@ -166,7 +191,7 @@ export class CanvasClient {
         throw new Error(errorMessage);
       }
 
-      const data = await response.json() as T[];
+      const data = parseCanvasJson<T[]>(await response.text());
       results.push(...data);
 
       // Check if we've hit the limit
@@ -180,6 +205,72 @@ export class CanvasClient {
     }
 
     return results;
+  }
+
+  /**
+   * Download raw file bytes from a Canvas file URL.
+   *
+   * Canvas file URLs redirect through several storage hosts
+   * (canvas-user-content.com, inscloudgate.net). Redirects are followed
+   * manually so the API token is sent ONLY to the Canvas host itself and is
+   * never forwarded to third-party storage. The body is streamed with a hard
+   * byte cap so an oversized file cannot exhaust memory.
+   */
+  async download(
+    url: string,
+    maxBytes: number,
+  ): Promise<{ bytes: Uint8Array; contentType: string | null }> {
+    const canvasHost = new URL(this.baseUrl).host;
+    let current = new URL(url, this.baseUrl);
+
+    for (let hop = 0; hop < 8; hop++) {
+      if (current.protocol !== "https:") {
+        throw new Error(`Refusing non-HTTPS download URL (${current.host})`);
+      }
+      const headers: HeadersInit = current.host === canvasHost
+        ? { Authorization: `Bearer ${this.apiToken}` }
+        : {};
+      const response = await fetch(current, { headers, redirect: "manual" });
+
+      if (response.status >= 300 && response.status < 400) {
+        await response.body?.cancel();
+        const location = response.headers.get("location");
+        if (!location) throw new Error("Download redirect without a Location header");
+        current = new URL(location, current);
+        continue;
+      }
+
+      if (!response.ok) {
+        await response.body?.cancel();
+        throw new Error(`File download failed: ${response.status} ${response.statusText}`);
+      }
+
+      const declared = Number(response.headers.get("content-length") ?? "0");
+      if (declared > maxBytes) {
+        await response.body?.cancel();
+        throw new Error(`File is larger than the ${Math.round(maxBytes / 1e6)} MB limit`);
+      }
+
+      const chunks: Uint8Array[] = [];
+      let total = 0;
+      if (response.body) {
+        for await (const chunk of response.body) {
+          total += chunk.byteLength;
+          if (total > maxBytes) {
+            throw new Error(`File is larger than the ${Math.round(maxBytes / 1e6)} MB limit`);
+          }
+          chunks.push(chunk);
+        }
+      }
+      const bytes = new Uint8Array(total);
+      let offset = 0;
+      for (const c of chunks) {
+        bytes.set(c, offset);
+        offset += c.byteLength;
+      }
+      return { bytes, contentType: response.headers.get("content-type") };
+    }
+    throw new Error("Too many redirects while downloading file");
   }
 
   /**

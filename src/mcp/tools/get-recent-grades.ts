@@ -4,6 +4,7 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getRecentGrades } from "../../services/index.ts";
 import { getEffectiveStudentId } from "../../api/users.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
@@ -22,8 +23,7 @@ export const schema = {
     .number()
     .optional()
     .describe("Only show grades below this percentage (e.g., 70 for below 70%)"),
-  course_id: z
-    .number()
+  course_id: canvasId()
     .optional()
     .describe("Filter by specific course ID (if omitted, checks all courses)"),
 };

@@ -8,6 +8,7 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { getPeople } from "../../services/index.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
 
@@ -15,7 +16,7 @@ export const schema = {
   student_id: z.string().optional().describe(
     "Student ID (use 'self' for current user, or numeric ID from get_students tool). For observer accounts to get courses.",
   ),
-  course_id: z.number().optional().describe(
+  course_id: canvasId().optional().describe(
     "Filter to specific course (omit to fetch from all active courses)",
   ),
 };

@@ -21,6 +21,11 @@ import { getAllStudentsStatusTool } from "./get-all-students-status.ts";
 import { getFeedbackTool } from "./get-feedback.ts";
 import { getPeopleTool } from "./get-people.ts";
 import { getDiscussionsTool } from "./get-discussions.ts";
+import { getAssignmentDetailsTool } from "./get-assignment-details.ts";
+import { getAssignmentRubricTool } from "./get-assignment-rubric.ts";
+import { listCourseFilesTool } from "./list-course-files.ts";
+import { getAssignmentFilesTool } from "./get-assignment-files.ts";
+import { saveCanvasFileTool } from "./save-canvas-file.ts";
 import type { AnyToolDefinition } from "../types.ts";
 
 /**
@@ -46,12 +51,20 @@ export const tools: AnyToolDefinition[] = [
   getFeedbackTool,
   getPeopleTool,
   getDiscussionsTool,
+  getAssignmentDetailsTool,
+  getAssignmentRubricTool,
+  listCourseFilesTool,
+  getAssignmentFilesTool,
+  saveCanvasFileTool,
 ];
 
 // Re-export individual tools for direct access if needed
 export {
   getAllStudentsStatusTool,
   getAnnouncementsTool,
+  getAssignmentDetailsTool,
+  getAssignmentFilesTool,
+  getAssignmentRubricTool,
   getCalendarEventsTool,
   getComprehensiveStatusTool,
   getCoursesTool,
@@ -69,4 +82,6 @@ export {
   getUnsubmittedPastDueTool,
   getUpcomingAssignmentsTool,
   listAssignmentsTool,
+  listCourseFilesTool,
+  saveCanvasFileTool,
 };

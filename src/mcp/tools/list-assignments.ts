@@ -4,11 +4,12 @@
  */
 
 import { z } from "zod";
+import { canvasId } from "../schemas.ts";
 import { type AssignmentBucket, listAssignments } from "../../services/index.ts";
 import { jsonResponse, type ToolDefinition } from "../types.ts";
 
 export const schema = {
-  course_id: z.number().describe(
+  course_id: canvasId().describe(
     "The internal Canvas Course ID. Use 'get_courses' to find this ID from a course name.",
   ),
   bucket: z

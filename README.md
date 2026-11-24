@@ -10,6 +10,51 @@ account. Query grades, assignments, missing work, and more through natural langu
 **Perfect for:** Parents monitoring their child's academic progress, students tracking their own
 work, or anyone who wants to interact with Canvas data through AI.
 
+## About This Fork
+
+This is a fork of [mtgibbs/canvas-lms-mcp](https://github.com/mtgibbs/canvas-lms-mcp) (MIT) with
+changes focused on students and on keeping credentials safe:
+
+- **New tools**
+  - `get_assignment_details`: full assignment instructions as plain text, plus dates, submission
+    rules, attachments and the rubric
+  - `get_assignment_rubric`: rubric criteria, and your score and comment on each criterion once
+    graded
+  - `list_course_files`: browse and search a course's Files tab
+  - `get_assignment_files`: every Canvas file attached to or linked from an assignment
+  - `save_canvas_file`: download a file to a local folder so the AI can read it
+- **Fixes**
+  - Large cross-shard Canvas IDs (above 2^53) are no longer rounded, which sent requests to the
+    wrong course
+  - `prompts/list` no longer fails (prompt arguments are now registered as a Zod shape)
+- **Locked-down launcher** (`run-canvas-mcp.sh`, macOS)
+  - Reads the API token from the macOS Keychain at startup, never from a file or config
+  - Runs Deno with network access only to your Canvas host and its file-storage hosts
+  - File reads are limited to the repo and the download folder; file writes to the download
+    folder only
+  - No dependency downloads at runtime (`--cached-only --frozen`)
+
+The server is still read-only toward Canvas: it only makes GET requests and cannot submit, post
+or change anything. `save_canvas_file` writes only to your local download folder and never
+overwrites an existing file.
+
+### Quick start (macOS, this fork)
+
+```bash
+brew install deno
+git clone https://github.com/aarav-wadhwani/canvas-lms-mcp.git ~/Developer/canvas-lms-mcp
+cd ~/Developer/canvas-lms-mcp && deno cache agent.ts
+
+# Store your Canvas token in the Keychain (you'll be prompted to paste it)
+security add-generic-password -a "$USER" -s canvas-mcp-token -w
+
+# Edit CANVAS_HOST in run-canvas-mcp.sh to your school's Canvas host, then:
+claude mcp add canvas -s user -- ~/Developer/canvas-lms-mcp/run-canvas-mcp.sh
+```
+
+Keep the repo and download folder out of `~/Desktop`, `~/Documents` and `~/Downloads`. macOS
+privacy protection blocks the Claude desktop app from running or writing files there.
+
 ## What Can It Do?
 
 Ask Claude things like:
