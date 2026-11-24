@@ -30,13 +30,13 @@ changes focused on students and on keeping credentials safe:
 - **Locked-down launcher** (`run-canvas-mcp.sh`, macOS)
   - Reads the API token from the macOS Keychain at startup, never from a file or config
   - Runs Deno with network access only to your Canvas host and its file-storage hosts
-  - File reads are limited to the repo and the download folder; file writes to the download
-    folder only
+  - File reads are limited to the repo and the download folder; file writes to the download folder
+    only
   - No dependency downloads at runtime (`--cached-only --frozen`)
 
-The server is still read-only toward Canvas: it only makes GET requests and cannot submit, post
-or change anything. `save_canvas_file` writes only to your local download folder and never
-overwrites an existing file.
+The server is still read-only toward Canvas: it only makes GET requests and cannot submit, post or
+change anything. `save_canvas_file` writes only to your local download folder and never overwrites
+an existing file.
 
 ### Quick start (macOS, this fork)
 
@@ -52,8 +52,8 @@ security add-generic-password -a "$USER" -s canvas-mcp-token -w
 claude mcp add canvas -s user -- ~/Developer/canvas-lms-mcp/run-canvas-mcp.sh
 ```
 
-Keep the repo and download folder out of `~/Desktop`, `~/Documents` and `~/Downloads`. macOS
-privacy protection blocks the Claude desktop app from running or writing files there.
+Keep the repo and download folder out of `~/Desktop`, `~/Documents` and `~/Downloads`. macOS privacy
+protection blocks the Claude desktop app from running or writing files there.
 
 ## What Can It Do?
 
